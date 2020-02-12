@@ -41,6 +41,9 @@ func _ready():
 		Tween.EASE_IN
 	)
 	
+	$Timer.wait_time = rand_range(1, 2)
+	$Timer.start()
+	
 	bounceDown()
 	
 func bounceDown():
@@ -65,3 +68,8 @@ func _on_BounceTweenDown_tween_completed(object, key):
 
 func _on_BounceTweenUp_tween_completed(object, key):
 	bounceDown()
+
+
+func _on_Timer_timeout():
+	$AnimatedSprite.frame = 0
+	$AnimatedSprite.play("shine")

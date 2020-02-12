@@ -78,11 +78,12 @@ func game_over():
 	$GameTimer.stop()
 	for coin in $CoinContainer.get_children():
 		coin.queue_free()
-	
+		
+	$PowerUpTimer.stop()
 	$HUD.show_game_over()
 	$Player.die()
 
 func _on_PowerUpTimer_timeout():
 	var powerUp = PowerUp.instance()
 	powerUp.position = Vector2(rand_range(0, screensize.x), rand_range(0, screensize.y))
-	add_child(powerUp)
+	$CoinContainer.add_child(powerUp)
