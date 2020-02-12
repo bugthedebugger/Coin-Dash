@@ -1,10 +1,13 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scripts/Main/Main.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Coin.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/HUD.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/grass.png" type="Texture" id=4]
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/audio/Coin.wav" type="AudioStream" id=6]
+[ext_resource path="res://assets/audio/Level.wav" type="AudioStream" id=7]
+[ext_resource path="res://assets/audio/Hit.wav" type="AudioStream" id=8]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 1 )
@@ -29,6 +32,15 @@ stretch_mode = 2
 position = Vector2( 240, 350 )
 
 [node name="GameTimer" type="Timer" parent="."]
+
+[node name="CoinSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
+
+[node name="LevelSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 7 )
+
+[node name="EndSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 8 )
 [connection signal="start_game" from="HUD" to="." method="new_game"]
 [connection signal="hurt" from="Player" to="." method="_on_Player_hurt"]
 [connection signal="pickup" from="Player" to="." method="_on_Player_pickup"]
