@@ -1,6 +1,7 @@
 extends Area2D
 signal pickup
 signal hurt
+signal powerup
 
 export (int) var speed
 export (bool) var debug = false
@@ -53,7 +54,10 @@ func get_input():
 func _on_Player_area_entered(area):
 	if area.is_in_group("coins"):
 		area.pickup()
-		emit_signal("pickup")
+		emit_signal("pickup", "coin")
 	if area.is_in_group("obstacles"):
 		emit_signal("hurt")
 		die()
+	if area.is_in_group("powerup"):
+		area.powerup()
+		emit_signal("pickup", "powerup")
