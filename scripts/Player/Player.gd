@@ -56,8 +56,8 @@ func _on_Player_area_entered(area):
 		area.pickup()
 		emit_signal("pickup", "coin")
 	if area.is_in_group("obstacles"):
-		emit_signal("hurt")
-		die()
+		print("Cactus!")
+		emit_signal("hurt", "cactus")
 	if area.is_in_group("powerup"):
 		area.powerup()
 		emit_signal("pickup", "powerup")

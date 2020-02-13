@@ -2,6 +2,7 @@ extends Node2D
 
 export (PackedScene) var Coin
 export (PackedScene) var PowerUp
+export (PackedScene) var Cactus
 export (int) var playTime
 export (bool) var debug = false
 export (int) var minPowerUpTime = 3
@@ -25,6 +26,9 @@ func _process(delta):
 	if playing and $CoinContainer.get_child_count() == 0:
 		level += 1
 		spawn_coins()
+		clean_obstacles()
+		spawn_obstacles()
+		
 	
 func new_game():
 	playing = true
@@ -37,6 +41,8 @@ func new_game():
 	$HUD.update_score(score)
 	$HUD.update_time(time_left)
 	spawn_coins()
+	clean_obstacles()
+	spawn_obstacles()
 	
 func spawn_coins():
 	$LevelSound.play()
@@ -45,8 +51,18 @@ func spawn_coins():
 # warning-ignore:unused_variable
 	for i in range(4 + level):
 		var coin = Coin.instance() 
-		$CoinContainer.add_child(coin)
 		coin.position = Vector2(rand_range(0, screensize.x), rand_range(0, screensize.y))
+		$CoinContainer.add_child(coin)
+		
+func spawn_obstacles():
+	for i in range(3 + level):
+		var cactus = Cactus.instance()
+		cactus.position = Vector2(rand_range(0, screensize.x), rand_range(0, screensize.y))
+		$CactusContainer.add_child(cactus)
+		
+func clean_obstacles():
+	for cactus in $CactusContainer.get_children():
+		cactus.queue_free()
 
 func _on_GameTimer_timeout():
 	time_left -= 1
@@ -68,8 +84,11 @@ func _on_Player_pickup(type):
 			time_left += 5
 			$PowerUpSound.play()
 			$HUD.update_time(time_left)
+		"cactus":
+			if debug:
+				print("Hit cactus")
 
-func _on_Player_hurt():
+func _on_Player_hurt(type):
 	game_over()
 
 func game_over():
@@ -78,6 +97,8 @@ func game_over():
 	$GameTimer.stop()
 	for coin in $CoinContainer.get_children():
 		coin.queue_free()
+	for powerUp in $PowerUpContainer.get_children():
+		powerUp.queue_free()
 		
 	$PowerUpTimer.stop()
 	$HUD.show_game_over()
@@ -86,4 +107,4 @@ func game_over():
 func _on_PowerUpTimer_timeout():
 	var powerUp = PowerUp.instance()
 	powerUp.position = Vector2(rand_range(0, screensize.x), rand_range(0, screensize.y))
-	$CoinContainer.add_child(powerUp)
+	$PowerUpContainer.add_child(powerUp)
